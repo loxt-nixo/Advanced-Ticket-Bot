@@ -33,15 +33,6 @@ module.exports = {
                 .setTitle('Close the Ticket')
                 .setCustomId('modalClose')
 
-            const ID = new TextInputBuilder()
-                .setCustomId('id')
-                .setLabel('ID of the Ticket Owner')
-                .setPlaceholder('Enter the ID of the user who opened the ticket')
-                .setStyle(TextInputStyle.Short)
-                .setMaxLength(20)
-                .setMinLength(12)
-                .setRequired(true)
-
             const reason = new TextInputBuilder()
                 .setCustomId('reason')
                 .setLabel('Reason for closure')
@@ -50,9 +41,8 @@ module.exports = {
                 .setStyle(TextInputStyle.Short)
                 .setRequired(true)
 
-            const q = new ActionRowBuilder().addComponents(ID)
-            const q2 = new ActionRowBuilder().addComponents(reason)
-            modalClose.addComponents(q, q2)
+            const q = new ActionRowBuilder().addComponents(reason)
+            modalClose.addComponents(q)
 
             await interaction.showModal(modalClose)
 
