@@ -60,10 +60,10 @@ module.exports = {
         } else if (interaction.customId === 'modalClose') { //MODAL CLOSE INTERACTION
 
             if (interaction.isModalSubmit()) {interaction.deferUpdate()}
-            const ID = interaction.fields.getTextInputValue('id');
+            //const ID = interaction.fields.getTextInputValue('id');
             const reason = interaction.fields.getTextInputValue('reason');
-            const member = interaction.guild.members.cache.get(ID);
-            const ticketOwner = await schema.findOne({userID: ID });
+            const ticketOwner = await schema.findOne({ channelid: `${interaction.channel.id}` });
+            const member = await interaction.guild.members.fetch(ticketOwner.userID);
             const logsChannel = client.channels.cache.get(client.config.transcriptLogs);
             const channel = interaction.channel;
             const attachment = await discordTranscripts.createTranscript(channel, {
@@ -107,11 +107,11 @@ module.exports = {
 
                 await logsChannel.send({embeds: [embedLogs], files: [attachment]})
                 await member.send({embeds: [embedDM], files: [attachment]}).catch((err) => { return client.logs.error("[TICKETS] The user may have blocked DMs, message sending failed.") });
-                await schema.findOneAndDelete({
+                await schema.deleteOne({
                     tickets: `1`,
                     channelid: `${interaction.channel.id}`,
-                })
-                await interaction.channel.delete()
+                });
+                await interaction.channel.delete();
 
 
             } else {
